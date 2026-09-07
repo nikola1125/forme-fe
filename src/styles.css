@@ -1,0 +1,331 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Formë design system — warm panna / sand / clay palette.
+ * All colors in oklch, all tokens semantic.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-panna: var(--panna);
+  --color-sand: var(--sand);
+  --color-clay: var(--clay);
+  --color-gold: var(--gold);
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Jost", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --radius: 0.125rem;
+  --panna: oklch(0.973 0.014 88);
+  --sand: oklch(0.905 0.028 82);
+  --clay: oklch(0.62 0.072 55);
+  --gold: oklch(0.74 0.078 76);
+
+  --background: oklch(0.973 0.014 88);
+  --foreground: oklch(0.31 0.024 58);
+  --card: oklch(0.988 0.008 88);
+  --card-foreground: oklch(0.31 0.024 58);
+  --popover: oklch(0.988 0.008 88);
+  --popover-foreground: oklch(0.31 0.024 58);
+  --primary: oklch(0.38 0.036 52);
+  --primary-foreground: oklch(0.977 0.012 88);
+  --secondary: oklch(0.935 0.022 84);
+  --secondary-foreground: oklch(0.36 0.03 55);
+  --muted: oklch(0.94 0.018 86);
+  --muted-foreground: oklch(0.5 0.032 60);
+  --accent: oklch(0.885 0.036 78);
+  --accent-foreground: oklch(0.34 0.03 55);
+  --destructive: oklch(0.52 0.16 27);
+  --destructive-foreground: oklch(0.98 0.01 88);
+  --border: oklch(0.885 0.024 82);
+  --input: oklch(0.885 0.024 82);
+  --ring: oklch(0.62 0.072 55);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-accent-foreground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+}
+
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-muted-foreground);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility grain {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@utility link-underline {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  &:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes veil-lift {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-101%);
+  }
+}
+
+@keyframes letter-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.4em);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+@keyframes rule-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes slow-zoom {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Intro showcase — framed image reveal + collage wipes. */
+@keyframes intro-panel {
+  from {
+    opacity: 0;
+    clip-path: inset(14% 14% 14% 14%);
+    transform: scale(1.08);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: scale(1);
+  }
+}
+
+@keyframes intro-reveal-l {
+  from {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes intro-reveal-r {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 0 100%);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@utility animate-rise {
+  animation: rise 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@utility animate-fade-in {
+  animation: fade-in 1.2s ease both;
+}
+
+@utility animate-slow-zoom {
+  animation: slow-zoom 2.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes gallery-zoom {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes gallery-caption {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility animate-gallery-zoom {
+  animation: gallery-zoom 8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@utility animate-gallery-caption {
+  animation: gallery-caption 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/*
+ * Scroll reveal — progressive enhancement. Content is visible by default so it
+ * survives with no JS and before hydration; the hidden-then-rise state applies
+ * only when scripting is available (so the observer can rise it back in), and is
+ * skipped for reduced motion.
+ */
+.reveal {
+  opacity: 1;
+}
+
+@media (scripting: enabled) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal.reveal-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
