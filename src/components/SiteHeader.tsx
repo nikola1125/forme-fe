@@ -6,7 +6,6 @@ const nav = [
   { to: "/collection", label: "Collection" },
   { to: "/as-seen-on", label: "As Seen On" },
   { to: "/about", label: "Studio" },
-  { to: "/booking", label: "Booking" },
 ] as const;
 
 export function SiteHeader() {
@@ -22,27 +21,27 @@ export function SiteHeader() {
 
   return (
     <header
-      className={`fixed top-0 left-0 z-50 w-full transition-all duration-700 ${
-        solid ? "bg-panna/85 backdrop-blur-md" : "bg-transparent"
+      className={`fixed top-0 left-0 z-50 w-full border-b transition-colors duration-500 ${
+        solid ? "border-border bg-background/80 backdrop-blur-xl" : "border-transparent bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-10">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-10">
         <Link
           to="/"
-          className="font-display text-xl text-primary"
-          style={{ letterSpacing: "0.24em" }}
+          className="font-display text-lg text-foreground"
+          style={{ letterSpacing: "0.3em" }}
           onClick={() => setOpen(false)}
         >
           FORMË
         </Link>
 
-        <nav className="hidden items-center gap-10 md:flex">
+        <nav className="hidden items-center gap-9 md:flex">
           {nav.map((item) => (
             <Link
               key={item.to}
               to={item.to}
-              className="link-underline text-xs tracking-[0.2em] text-foreground/80 uppercase transition-colors hover:text-primary"
-              activeProps={{ className: "text-primary" }}
+              className="font-mono text-[11px] tracking-[0.18em] text-muted-foreground uppercase transition-colors hover:text-foreground"
+              activeProps={{ className: "text-foreground" }}
             >
               {item.label}
             </Link>
@@ -51,10 +50,16 @@ export function SiteHeader() {
             href={site.instagram}
             target="_blank"
             rel="noreferrer"
-            className="link-underline text-xs tracking-[0.2em] text-foreground/80 uppercase hover:text-primary"
+            className="font-mono text-[11px] tracking-[0.18em] text-muted-foreground uppercase transition-colors hover:text-foreground"
           >
             Instagram
           </a>
+          <Link
+            to="/booking"
+            className="bg-primary px-5 py-2.5 font-mono text-[10px] tracking-[0.2em] text-primary-foreground uppercase transition-colors hover:bg-accent"
+          >
+            Book
+          </Link>
         </nav>
 
         <button
@@ -64,16 +69,16 @@ export function SiteHeader() {
           className="flex h-8 w-8 flex-col items-end justify-center gap-1.5 md:hidden"
         >
           <span
-            className={`h-px w-6 bg-primary transition-transform duration-500 ${open ? "translate-y-[3.5px] rotate-45" : ""}`}
+            className={`h-px w-6 bg-foreground transition-transform duration-500 ${open ? "translate-y-[3.5px] rotate-45" : ""}`}
           />
           <span
-            className={`h-px bg-primary transition-all duration-500 ${open ? "w-6 -translate-y-[3.5px] -rotate-45" : "w-4"}`}
+            className={`h-px bg-foreground transition-all duration-500 ${open ? "w-6 -translate-y-[3.5px] -rotate-45" : "w-4"}`}
           />
         </button>
       </div>
 
       <div
-        className={`overflow-hidden border-border bg-panna/95 backdrop-blur-md transition-[max-height] duration-700 md:hidden ${
+        className={`overflow-hidden border-border bg-background/95 backdrop-blur-xl transition-[max-height] duration-700 md:hidden ${
           open ? "max-h-96 border-b" : "max-h-0"
         }`}
       >
@@ -83,17 +88,19 @@ export function SiteHeader() {
               key={item.to}
               to={item.to}
               onClick={() => setOpen(false)}
-              className="font-display text-2xl text-primary"
+              className="font-display text-2xl text-foreground"
             >
               {item.label}
             </Link>
           ))}
-          <a
-            href={site.instagram}
-            target="_blank"
-            rel="noreferrer"
-            className="eyebrow pt-2"
+          <Link
+            to="/booking"
+            onClick={() => setOpen(false)}
+            className="font-display text-2xl text-accent"
           >
+            Booking
+          </Link>
+          <a href={site.instagram} target="_blank" rel="noreferrer" className="eyebrow pt-2">
             {site.instagramHandle}
           </a>
         </nav>

@@ -4,6 +4,22 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@font-face {
+  font-family: "Crowk";
+  src: url("/fonts/Crowk-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Crowk";
+  src: url("/fonts/Crowk-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
 /*
  * Formë design system — warm panna / sand / clay palette.
  * All colors in oklch, all tokens semantic.
@@ -39,36 +55,43 @@
   --color-sand: var(--sand);
   --color-clay: var(--clay);
   --color-gold: var(--gold);
-  --font-display: "Cormorant Garamond", Georgia, serif;
-  --font-sans: "Jost", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Crowk", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, "SFMono-Regular", monospace;
 }
 
 :root {
   --radius: 0.125rem;
-  --panna: oklch(0.973 0.014 88);
-  --sand: oklch(0.905 0.028 82);
-  --clay: oklch(0.62 0.072 55);
-  --gold: oklch(0.74 0.078 76);
 
-  --background: oklch(0.973 0.014 88);
-  --foreground: oklch(0.31 0.024 58);
-  --card: oklch(0.988 0.008 88);
-  --card-foreground: oklch(0.31 0.024 58);
-  --popover: oklch(0.988 0.008 88);
-  --popover-foreground: oklch(0.31 0.024 58);
-  --primary: oklch(0.38 0.036 52);
-  --primary-foreground: oklch(0.977 0.012 88);
-  --secondary: oklch(0.935 0.022 84);
-  --secondary-foreground: oklch(0.36 0.03 55);
-  --muted: oklch(0.94 0.018 86);
-  --muted-foreground: oklch(0.5 0.032 60);
-  --accent: oklch(0.885 0.036 78);
-  --accent-foreground: oklch(0.34 0.03 55);
-  --destructive: oklch(0.52 0.16 27);
-  --destructive-foreground: oklch(0.98 0.01 88);
-  --border: oklch(0.885 0.024 82);
-  --input: oklch(0.885 0.024 82);
-  --ring: oklch(0.62 0.072 55);
+  /* Brand accents */
+  --panna: oklch(0.985 0.008 85); /* light — used as text on the dark intro */
+  --sand: oklch(0.5 0.018 55);
+  --clay: oklch(0.6 0.1 55); /* = accent, used by hover:bg-clay */
+  --gold: oklch(0.6 0.1 55);
+
+  /* Surfaces — warm ivory, gently stepped for section separation */
+  --background: oklch(0.985 0.008 85);
+  --foreground: oklch(0.26 0.014 55);
+  --card: oklch(0.965 0.012 82);
+  --card-foreground: oklch(0.26 0.014 55);
+  --popover: oklch(0.99 0.006 85);
+  --popover-foreground: oklch(0.26 0.014 55);
+  --secondary: oklch(0.95 0.014 82);
+  --secondary-foreground: oklch(0.26 0.014 55);
+  --muted: oklch(0.95 0.014 82);
+  --muted-foreground: oklch(0.5 0.018 55);
+
+  /* Primary = warm near-black (buttons + heading text); accent = warm clay */
+  --primary: oklch(0.26 0.014 55);
+  --primary-foreground: oklch(0.985 0.008 85);
+  --accent: oklch(0.6 0.1 55);
+  --accent-foreground: oklch(0.985 0.008 85);
+
+  --destructive: oklch(0.55 0.18 27);
+  --destructive-foreground: oklch(0.985 0.008 85);
+  --border: oklch(0.9 0.012 80);
+  --input: oklch(0.9 0.012 80);
+  --ring: oklch(0.6 0.1 55);
 }
 
 @layer base {
@@ -80,7 +103,7 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    font-weight: 300;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -89,7 +112,7 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    font-weight: 300;
+    font-weight: 400;
     letter-spacing: -0.01em;
   }
 
@@ -104,11 +127,29 @@
   }
 }
 
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
 @utility eyebrow {
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: 0.6875rem;
   font-weight: 400;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--color-muted-foreground);
 }
@@ -193,6 +234,30 @@
   }
 }
 
+@keyframes intro-wordmark {
+  from {
+    opacity: 0;
+    transform: translateY(0.22em) scaleY(0.92);
+    letter-spacing: 0.2em;
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    letter-spacing: 0.12em;
+    filter: blur(0);
+  }
+}
+
+@keyframes intro-image-drift {
+  from {
+    transform: scale(1.11) translateY(1.5%);
+  }
+  to {
+    transform: scale(1.01) translateY(-1%);
+  }
+}
+
 @keyframes rule-grow {
   from {
     transform: scaleX(0);
@@ -244,6 +309,75 @@
   to {
     opacity: 1;
     clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Mobile intro — stacked images slide in from alternating sides. */
+@keyframes intro-slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-101%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes intro-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(101%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes intro-slide-in-top {
+  from {
+    opacity: 0;
+    transform: translateY(-101%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes intro-slide-in-bottom {
+  from {
+    opacity: 0;
+    transform: translateY(101%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slow Ken-Burns drift on the stacked mobile images. */
+@keyframes intro-kenburns {
+  from {
+    transform: scale(1.05);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Text melts into the imagery: blur + wide tracking resolving to sharp. */
+@keyframes intro-text-blend {
+  from {
+    opacity: 0;
+    filter: blur(16px);
+    letter-spacing: 0.34em;
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    letter-spacing: 0.06em;
   }
 }
 

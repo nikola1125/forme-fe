@@ -14,7 +14,7 @@ export function DressCard({ dress }: { dress: Dress }) {
           className="aspect-[3/4] w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
         />
         {dress.exclusive ? (
-          <span className="absolute top-3 left-3 bg-panna/90 px-2.5 py-1 text-[10px] tracking-[0.22em] text-primary uppercase sm:top-4 sm:left-4 sm:px-3 sm:tracking-[0.24em]">
+          <span className="absolute top-3 left-3 bg-foreground px-2.5 py-1 font-mono text-[10px] tracking-[0.22em] text-background uppercase sm:top-4 sm:left-4 sm:px-3 sm:tracking-[0.24em]">
             Exclusive
           </span>
         ) : null}
