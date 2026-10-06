@@ -15,6 +15,7 @@
 //     listener.  Images are never hidden before hydration.
 
 import { useEffect, useRef, useState } from "react";
+import { createTimeline, onScroll } from "animejs";
 
 export interface GallerySlide {
   image: string;
@@ -75,52 +76,58 @@ function StaticGallery({ slides }: Props) {
 
 function PinnedGallery({ slides }: Props) {
   const outerRef = useRef<HTMLDivElement>(null);
-  // Start at 0 so SSR renders the first image fully visible.
+  const layersRef = useRef<Array<HTMLDivElement | null>>([]);
+  const imgsRef = useRef<Array<HTMLImageElement | null>>([]);
+  // activeIdx only drives the caption / dots / counter. The cross-fade itself is
+  // scrubbed by an anime.js timeline linked to scroll position.
   const [activeIdx, setActiveIdx] = useState(0);
-  const rafRef = useRef<number | null>(null);
 
   const total = slides.length;
 
   useEffect(() => {
     const outer = outerRef.current;
-    if (!outer) return;
+    if (!outer || total === 0) return;
+    const layers = layersRef.current.filter(Boolean) as HTMLDivElement[];
+    const imgs = imgsRef.current.filter(Boolean) as HTMLImageElement[];
 
-    function update() {
-      if (!outer) return;
-      const rect = outer.getBoundingClientRect();
-      // Distance scrolled within the outer wrapper (how far the top edge is
-      // above the viewport top).
-      const scrolled = -rect.top;
-      // Total scrollable range = outerHeight − windowHeight (the sticky inner
-      // keeps the last viewport worth of outer height in view).
-      const range = rect.height - window.innerHeight;
+    const SLICE = 1000; // per-transition unit; progress is normalised so the value is arbitrary
+    // Momentum catch-up between scroll and the cross-fade — higher = silkier but
+    // laggier. Lenis already smooths the scroll, so keep this light.
+    const SMOOTH = 0.6;
 
-      if (range <= 0) return;
+    let lastIdx = 0;
+    const tl = createTimeline({
+      defaults: { ease: "linear" },
+      onUpdate: (self) => {
+        const pos = self.progress * Math.max(1, total - 1);
+        const idx = Math.min(total - 1, Math.max(0, Math.round(pos)));
+        if (idx !== lastIdx) {
+          lastIdx = idx;
+          setActiveIdx(idx);
+        }
+      },
+      autoplay: onScroll({
+        target: outer,
+        enter: "top top",
+        leave: "bottom bottom",
+        sync: SMOOTH,
+      }),
+    });
 
-      const progress = Math.min(1, Math.max(0, scrolled / range));
-      // Map [0,1] → [0, total-1] with a step function so each slide gets an
-      // equal share of the scroll range.
-      const raw = progress * total;
-      const idx = Math.min(total - 1, Math.floor(raw));
-
-      setActiveIdx(idx);
+    // Each successive image dissolves in over its slice of the scroll, easing
+    // from a hair of extra scale so the transition breathes (a soft Ken-Burns).
+    if (imgs[0]) {
+      tl.add(imgs[0], { scale: [1.04, 1], duration: SLICE * 0.6, ease: "out(2)" }, 0);
+    }
+    for (let i = 1; i < total; i++) {
+      tl.add(layers[i]!, { opacity: [0, 1], duration: SLICE }, (i - 1) * SLICE);
+      if (imgs[i]) {
+        tl.add(imgs[i]!, { scale: [1.06, 1], duration: SLICE, ease: "out(2)" }, (i - 1) * SLICE);
+      }
     }
 
-    function onScroll() {
-      if (rafRef.current !== null) return;
-      rafRef.current = requestAnimationFrame(() => {
-        rafRef.current = null;
-        update();
-      });
-    }
-
-    // Run once on mount in case the section is already partially scrolled.
-    update();
-
-    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+      tl.revert();
     };
   }, [total]);
 
@@ -136,33 +143,31 @@ function PinnedGallery({ slides }: Props) {
     >
       {/* Inner: pinned viewport-height container */}
       <div className="sticky top-0 h-screen overflow-hidden">
-        {/* Images — stacked, cross-fade via opacity */}
-        {slides.map((s, i) => {
-          const isActive = i === activeIdx;
-          return (
-            <div
-              key={s.handle}
-              aria-hidden={!isActive}
-              className="absolute inset-0 transition-opacity duration-[900ms] ease-in-out"
-              style={{ opacity: isActive ? 1 : 0 }}
-            >
-              {/* Image with Ken-Burns zoom — keying on activeIdx restarts the
-                  animation every time this slide becomes active */}
-              <img
-                key={isActive ? `active-${i}` : `idle-${i}`}
-                src={s.image}
-                alt={`${s.handle} wearing a Formë dress`}
-                loading={i === 0 ? "eager" : "lazy"}
-                width={1600}
-                height={2000}
-                className={[
-                  "absolute inset-0 h-full w-full object-cover object-center",
-                  isActive ? "animate-gallery-zoom" : "",
-                ].join(" ")}
-              />
-            </div>
-          );
-        })}
+        {/* Images — stacked; opacity driven imperatively for a smooth cross-fade.
+            These layers have no state-dependent props, so they never re-render
+            (which would otherwise clobber the imperative opacity). */}
+        {slides.map((s, i) => (
+          <div
+            key={s.handle}
+            ref={(el) => {
+              layersRef.current[i] = el;
+            }}
+            className="absolute inset-0 will-change-[opacity]"
+            style={{ opacity: i === 0 ? 1 : 0 }}
+          >
+            <img
+              ref={(el) => {
+                imgsRef.current[i] = el;
+              }}
+              src={s.image}
+              alt={`${s.handle} wearing a Formë dress`}
+              loading={i === 0 ? "eager" : "lazy"}
+              width={1600}
+              height={2000}
+              className="absolute inset-0 h-full w-full object-cover object-center will-change-transform"
+            />
+          </div>
+        ))}
 
         {/* Gradient overlays — bottom reads caption, left edge for depth */}
         <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/55 via-black/10 to-transparent" />
