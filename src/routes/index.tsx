@@ -133,7 +133,7 @@ function Home() {
           </Reveal>
 
           <div className="mt-12 sm:mt-14">
-            <DressShowcase dresses={exclusive} layout="rail" />
+            <DressShowcase dresses={exclusive} layout="masonry" />
           </div>
 
           <Reveal>
