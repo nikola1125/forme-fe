@@ -224,7 +224,7 @@ export function Intro() {
               ref={(el) => {
                 bandRefs.current[i] = el;
               }}
-              className={`relative overflow-hidden ${i === 1 ? "flex-[1.4]" : "flex-1"}`}
+              className={`relative min-h-0 overflow-hidden ${i === 1 ? "flex-[1.5]" : "flex-1"}`}
               style={{ opacity: 0, transform: i === 1 ? "translateX(101%)" : "translateX(-101%)" }}
             >
               <img
@@ -233,27 +233,42 @@ export function Intro() {
                 }}
                 src={src}
                 alt=""
-                className={`h-full w-full ${i === 1 ? "object-contain" : "object-cover"}`}
+                className="h-full w-full object-cover object-center"
                 style={{ transform: "scale(1.06)" }}
               />
+              {/* hairline divider between adjacent bands */}
+              {i > 0 ? (
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-panna/20" />
+              ) : null}
             </div>
           ))}
 
+          {/* top label — echoes the desktop frame */}
+          <p
+            className="pointer-events-none absolute top-7 left-1/2 z-20 -translate-x-1/2 font-mono text-[9px] tracking-[0.32em] text-panna/60 uppercase"
+            style={{ animation: "fade-in 1.2s ease 0.35s both" }}
+          >
+            Formë · Tiranë
+          </p>
+
+          {/* bottom depth gradient */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-1/3 bg-gradient-to-t from-black/55 to-transparent" />
+
           <div
             ref={mTextRef}
-            className="absolute inset-0 flex items-center justify-center px-8 text-center"
+            className="absolute inset-0 z-20 flex items-center justify-center px-7 text-center"
             style={{ opacity: 0 }}
           >
             <div
               className="absolute inset-0"
               style={{
                 background:
-                  "radial-gradient(85% 65% at 50% 50%, rgba(26,20,16,0.76) 0%, rgba(26,20,16,0.26) 100%)",
+                  "radial-gradient(90% 62% at 50% 50%, rgba(26,20,16,0.82) 0%, rgba(26,20,16,0.26) 100%)",
               }}
             />
             <h2
               ref={mHeadingRef}
-              className="relative font-display text-4xl leading-tight text-panna"
+              className="relative font-display text-[clamp(2.1rem,9vw,3.2rem)] leading-[1.08] text-panna"
               style={{ opacity: 0 }}
             >
               Formë your <span className="text-accent">perfect dress</span>

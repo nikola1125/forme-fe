@@ -54,8 +54,8 @@ function Home() {
     <>
       {/* Hero — statement left, image right */}
       <section className="relative border-b border-border">
-        <div className="grid min-h-screen md:grid-cols-2">
-          <div className="order-2 flex flex-col justify-center px-6 pt-14 pb-20 md:order-1 md:px-12 md:py-24 lg:px-20">
+        <div className="grid min-h-dvh md:grid-cols-2">
+          <div className="order-2 flex flex-col justify-center px-6 pt-12 pb-16 md:order-1 md:px-12 md:py-24 lg:px-20">
             <p className="eyebrow animate-fade-in" style={{ animationDelay: "0.15s" }}>
               Dress rental studio — {site.city}
             </p>
