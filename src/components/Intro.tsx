@@ -48,7 +48,8 @@ export function Intro() {
   const bandRefs = useRef<Array<HTMLDivElement | null>>([]);
   const bandImgRefs = useRef<Array<HTMLImageElement | null>>([]);
   const mTextRef = useRef<HTMLDivElement>(null);
-  const mHeadingRef = useRef<HTMLHeadingElement>(null);
+  const mWordRef = useRef<HTMLSpanElement>(null);
+  const mTailRef = useRef<HTMLSpanElement>(null);
 
   const tlRef = useRef<Timeline | null>(null);
   const finished = useRef(false);
@@ -141,22 +142,30 @@ export function Intro() {
           { scale: [1.06, 1], duration: 7000, ease: "out(2)", delay: stagger(620) },
           0,
         )
-        .add(mTextRef.current!, { opacity: [0, 1], duration: 1400 }, 2550)
+        // Dark veil in, then — exactly like desktop — "Formë" reveals first
+        // (letterSpacing + rise), and only after it settles does the rest of
+        // the line slide in beside/below it.
+        .add(mTextRef.current!, { opacity: [0, 1], duration: 1200 }, 2400)
         .add(
-          mHeadingRef.current!,
+          mWordRef.current!,
           {
             opacity: [0, 1],
-            translateY: ["0.5em", "0em"],
-            letterSpacing: ["0.34em", "0.06em"],
-            duration: 1700,
+            translateY: ["0.3em", "0em"],
+            letterSpacing: ["0.28em", "0.04em"],
+            duration: 1300,
           },
-          2650,
+          2500,
+        )
+        .add(
+          mTailRef.current!,
+          { opacity: [0, 1], translateX: [40, 0], duration: 1200 },
+          3650,
         )
         .add(containerRef.current!, {
           translateY: [0, "-101%"],
           duration: 720,
           ease: LIFT_EASE,
-        }, 5600);
+        }, 5900);
     } else {
       const cols = colRefs.current.filter(Boolean) as HTMLDivElement[];
       const imgs = imgRefs.current.filter(Boolean) as HTMLImageElement[];
@@ -266,12 +275,21 @@ export function Intro() {
                   "radial-gradient(90% 62% at 50% 50%, rgba(26,20,16,0.82) 0%, rgba(26,20,16,0.26) 100%)",
               }}
             />
-            <h2
-              ref={mHeadingRef}
-              className="relative font-display text-[clamp(2.1rem,9vw,3.2rem)] leading-[1.08] text-panna"
-              style={{ opacity: 0 }}
-            >
-              Formë your <span className="text-accent">perfect dress</span>
+            <h2 className="relative font-display leading-[1.08] text-panna">
+              <span
+                ref={mWordRef}
+                className="block text-[clamp(2.6rem,12vw,4rem)]"
+                style={{ opacity: 0, letterSpacing: "0.28em" }}
+              >
+                Formë
+              </span>
+              <span
+                ref={mTailRef}
+                className="mt-3 block text-[clamp(1.25rem,5.5vw,1.8rem)] tracking-tight text-accent"
+                style={{ opacity: 0, transform: "translateX(40px)" }}
+              >
+                your perfect dress
+              </span>
             </h2>
           </div>
         </div>
