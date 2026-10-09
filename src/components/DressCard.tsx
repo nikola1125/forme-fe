@@ -4,7 +4,12 @@ import type { Dress } from "@/lib/site";
 export function DressCard({ dress }: { dress: Dress }) {
   return (
     <article className="group">
-      <div className="relative overflow-hidden bg-secondary">
+      <Link
+        to="/dress/$slug"
+        params={{ slug: dress.slug }}
+        aria-label={`View ${dress.name}`}
+        className="relative block overflow-hidden bg-secondary"
+      >
         <img
           src={dress.image}
           alt={`${dress.name} — ${dress.note}`}
@@ -18,10 +23,14 @@ export function DressCard({ dress }: { dress: Dress }) {
             Exclusive
           </span>
         ) : null}
-      </div>
+      </Link>
 
       <div className="mt-4 flex flex-col gap-0.5 sm:mt-5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
-        <h3 className="font-display text-lg text-primary sm:text-2xl">{dress.name}</h3>
+        <h3 className="font-display text-lg text-primary sm:text-2xl">
+          <Link to="/dress/$slug" params={{ slug: dress.slug }} className="transition-colors hover:text-accent">
+            {dress.name}
+          </Link>
+        </h3>
         <span className="text-xs text-muted-foreground sm:text-sm">{dress.price}</span>
       </div>
       <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground sm:mt-2 sm:text-sm">

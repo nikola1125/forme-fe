@@ -14,6 +14,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AsSeenOnRouteImport } from './routes/as-seen-on'
 import { Route as BookingRouteImport } from './routes/booking'
 import { Route as CollectionRouteImport } from './routes/collection'
+import { Route as DressSlugRouteImport } from './routes/dress.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,6 +41,11 @@ const CollectionRoute = CollectionRouteImport.update({
   path: '/collection',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DressSlugRoute = DressSlugRouteImport.update({
+  id: '/dress/$slug',
+  path: '/dress/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/as-seen-on': typeof AsSeenOnRoute
   '/booking': typeof BookingRoute
   '/collection': typeof CollectionRoute
+  '/dress/$slug': typeof DressSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/as-seen-on': typeof AsSeenOnRoute
   '/booking': typeof BookingRoute
   '/collection': typeof CollectionRoute
+  '/dress/$slug': typeof DressSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +70,23 @@ export interface FileRoutesById {
   '/as-seen-on': typeof AsSeenOnRoute
   '/booking': typeof BookingRoute
   '/collection': typeof CollectionRoute
+  '/dress/$slug': typeof DressSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/as-seen-on' | '/booking' | '/collection'
+  fullPaths:
+    '/' | '/about' | '/as-seen-on' | '/booking' | '/collection' | '/dress/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/as-seen-on' | '/booking' | '/collection'
-  id: '__root__' | '/' | '/about' | '/as-seen-on' | '/booking' | '/collection'
+  to:
+    '/' | '/about' | '/as-seen-on' | '/booking' | '/collection' | '/dress/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/as-seen-on'
+    | '/booking'
+    | '/collection'
+    | '/dress/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +95,7 @@ export interface RootRouteChildren {
   AsSeenOnRoute: typeof AsSeenOnRoute
   BookingRoute: typeof BookingRoute
   CollectionRoute: typeof CollectionRoute
+  DressSlugRoute: typeof DressSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +135,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CollectionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dress/$slug': {
+      id: '/dress/$slug'
+      path: '/dress/$slug'
+      fullPath: '/dress/$slug'
+      preLoaderRoute: typeof DressSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -125,6 +151,7 @@ const rootRouteChildren: RootRouteChildren = {
   AsSeenOnRoute: AsSeenOnRoute,
   BookingRoute: BookingRoute,
   CollectionRoute: CollectionRoute,
+  DressSlugRoute: DressSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
